@@ -20,6 +20,13 @@ public class SecurityConfig {
     @Autowired
     private SecurityCandidateFilter securityCandidateFilter;
 
+    // Liberar rotas
+    private static final String[] SWAGGER_LIST = {
+        "/swagger-ui/**",
+        "/v3/api-docs/**",
+        "swagger-resources/**"
+    };
+
     @Bean // Sobrescrever implementação padrão de segurança
     SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception{
 
@@ -29,7 +36,8 @@ public class SecurityConfig {
             auth.requestMatchers("/candidate/").permitAll()
             .requestMatchers("/company/").permitAll()
             .requestMatchers("/company/auth").permitAll()
-            .requestMatchers("/candidate/auth").permitAll();
+            .requestMatchers("/candidate/auth").permitAll()
+            .requestMatchers(SWAGGER_LIST).permitAll();
             // demais rotas, exigir autenticação
             auth.anyRequest().authenticated();
         })
