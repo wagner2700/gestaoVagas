@@ -16,17 +16,14 @@ public class JWTCandidateProvider {
 
     public DecodedJWT validateToken(String token){
         token = token.replace("Bearer ", "");
-        System.out.println("JWTCANDIDATEPROVIDER " + token);
         Algorithm algorithm = Algorithm.HMAC256(secreKey);
 
         try {
             var tokenDecoded = JWT.require(algorithm)
             .build().verify(token);
-            System.out.println("JWTCANDIDATEPROVIDER2 " + tokenDecoded);
             return tokenDecoded;
         } catch (JWTVerificationException e) {
             e.printStackTrace();
-            System.out.println("JWTCANDIDATEPROVIDER2 dEUERRADO");
             return null;
         }
     }

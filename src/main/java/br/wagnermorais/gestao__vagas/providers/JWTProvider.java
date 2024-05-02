@@ -16,9 +16,6 @@ public class JWTProvider {
 
 
     public DecodedJWT validateToken(String token){
-
-        System.out.println("dsdasdsadsa");
-        System.out.println(token);
         // Separar somente token
         token = token.replace("Bearer ", "");
         
