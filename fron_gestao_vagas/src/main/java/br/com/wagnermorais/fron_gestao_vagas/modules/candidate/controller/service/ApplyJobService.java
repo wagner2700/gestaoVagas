@@ -1,9 +1,8 @@
 package br.com.wagnermorais.fron_gestao_vagas.modules.candidate.controller.service;
 
-import java.util.HashMap;
-import java.util.Map;
 import java.util.UUID;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -14,6 +13,9 @@ import org.springframework.web.client.RestTemplate;
 @Service
 public class ApplyJobService {
 
+    @Value("${host.apiu.gestao.vagas}")
+    private String hostApi;
+
     public String execute(String token, UUID idJob){
         RestTemplate restTemplate = new RestTemplate();
 
@@ -21,10 +23,11 @@ public class ApplyJobService {
         headers.setContentType(MediaType.APPLICATION_JSON);
         headers.setBearerAuth(token);
         
-
         HttpEntity<UUID> request = new HttpEntity<>(idJob, headers);
 
-        var result = restTemplate.postForObject("http://localhost:8080/candidate/job/apply", request, String.class);
+        String url = hostApi.concat("/candidate/job/apply");
+
+        var result = restTemplate.postForObject(url, request, String.class);
         System.out.println("Retorno da requisição");
         System.out.println(result);
         return result;

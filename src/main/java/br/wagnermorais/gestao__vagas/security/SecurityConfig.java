@@ -35,6 +35,7 @@ public class SecurityConfig {
             // permisão para essa duas rotas
             auth.requestMatchers("/candidate/").permitAll()
             .requestMatchers("/company/").permitAll()
+            .requestMatchers("/company/create").permitAll()
             .requestMatchers("/company/auth").permitAll()
             .requestMatchers("/candidate/auth").permitAll()
             .requestMatchers(SWAGGER_LIST).permitAll();

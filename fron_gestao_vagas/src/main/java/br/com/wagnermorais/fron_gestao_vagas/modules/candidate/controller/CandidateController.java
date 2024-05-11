@@ -14,13 +14,17 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import br.com.wagnermorais.fron_gestao_vagas.modules.candidate.controller.dto.CreateCandidateDTO;
 import br.com.wagnermorais.fron_gestao_vagas.modules.candidate.controller.service.ApplyJobService;
 import br.com.wagnermorais.fron_gestao_vagas.modules.candidate.controller.service.CandidateService;
+import br.com.wagnermorais.fron_gestao_vagas.modules.candidate.controller.service.CreateCandidateService;
 import br.com.wagnermorais.fron_gestao_vagas.modules.candidate.controller.service.FindJobsService;
 import br.com.wagnermorais.fron_gestao_vagas.modules.candidate.controller.service.ProfileCandidateService;
+import br.com.wagnermorais.fron_gestao_vagas.utils.FormatErrorMessagem;
 import jakarta.servlet.http.HttpSession;
 
 @Controller
@@ -38,11 +42,15 @@ public class CandidateController {
 
     @Autowired
     private ApplyJobService ApplyJobService;
+
+    @Autowired
+    private CreateCandidateService createCandidateService;
     
     @GetMapping("/login")
     public String login(){
         return "candidate/login";
     }
+
 
     @PostMapping("/singIn")
     public String singIn(RedirectAttributes redirectAttributes, HttpSession session ,String username , String password){
@@ -113,10 +121,39 @@ public class CandidateController {
 
     }
 
+    
+
+
+    @GetMapping("/create")
+    public String create(Model model){
+        model.addAttribute("candidate", new CreateCandidateDTO());
+        return "candidate/create";
+    }
+
+
+    @PostMapping("/create")
+    public String save(CreateCandidateDTO candidateDTO , Model model){
+        try {
+            this.createCandidateService.execute(candidateDTO);
+        } catch (HttpClientErrorException e) {
+            model.addAttribute("error_message", FormatErrorMessagem.formatErrorMessagem(e.getResponseBodyAsString()));
+            
+        }
+        
+
+        model.addAttribute("candidate", candidateDTO);
+        return "candidate/create";
+    }
+
+
     private String getToken(){
         Authentication authentication= SecurityContextHolder.getContext().getAuthentication();
 
         return authentication.getDetails().toString();
     }
+
+    
+ 
+
 
 }
